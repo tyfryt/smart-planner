@@ -1,11 +1,5 @@
 import requests
 
-
-OLLAMA_URL = "http://localhost:11434/api/chat"
-
-
-import requests
-
 OLLAMA_URL = "http://localhost:11434/api/generate"
 
 
@@ -20,34 +14,33 @@ def ask_ollama(prompt):
     )
 
     data = response.json()
-
     return data["response"]
 
 
-def get_category(text):
+def get_category(task):
     prompt = f"""
     Отнеси задачу к одной категории:
     работа, личное, здоровье, обучение, другое.
 
-    Задача: {text}
+    Задача: {task}
 
-    Ответ только одним словом.
+    Верни только категорию.
     """
 
     return ask_ollama(prompt).strip().lower()
 
 
-def estimate_time(text):
+def estimate_time(task):
     prompt = f"""
-    Оцени сколько минут займет задача:
-    {text}
+    Оцени сколько минут займёт задача:
+    {task}
 
-    Ответ только числом.
+    Верни только число.
     """
 
     result = ask_ollama(prompt)
 
-    # защита от мусора
-    digits = "".join([c for c in result if c.isdigit()])
-
-    return int(digits) if digits else 10
+    try:
+        return int(result.strip())
+    except:
+        return 30

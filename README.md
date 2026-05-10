@@ -1,25 +1,40 @@
-# Smart Task Planner (with Ollama AI)
+/Users/user/PycharmProjects/дом/.venv/bin/python /Users/user/PycharmProjects/дом/smart_planner/main.py 
 
-## Описание
-Планировщик задач с локальным AI через Ollama.
+=== SMART PLANNER ===
 
-## Функции
-- Добавление задач
-- Автокатегоризация через AI
-- Оценка времени через AI
-- Просмотр задач
-- Удаление задач
+1. Add task
+2. Show tasks
+3. Delete task
+4. Exit
 
-## Технологии
-- Python
-- SQLite
-- Ollama (локальный AI)
+Choose: 2
+No tasks
 
-## Запуск
+=== SMART PLANNER ===
 
-1. Установить Ollama:
-https://ollama.com
+1. Add task
+2. Show tasks
+3. Delete task
+4. Exit
 
-2. Скачать модель:
-```bash
-ollama run llama3.2
+Choose: 1
+Task: гулять
+Traceback (most recent call last):
+  File "/Users/user/PycharmProjects/дом/smart_planner/main.py", line 43, in <module>
+    menu()
+    ~~~~^^
+  File "/Users/user/PycharmProjects/дом/smart_planner/main.py", line 23, in menu
+    task_service.add_task(title)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/user/PycharmProjects/дом/smart_planner/task_service.py", line 11, in add_task
+    cursor.execute("""
+    ~~~~~~~~~~~~~~^^^^
+    INSERT INTO tasks (title, category, estimated_time)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    VALUES (?, ?, ?)
+    ^^^^^^^^^^^^^^^^
+    """, (title, category, estimated_time))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: table tasks has no column named estimated_time
+
+Process finished with exit code 1
