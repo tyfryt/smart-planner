@@ -1,40 +1,65 @@
-/Users/user/PycharmProjects/дом/.venv/bin/python /Users/user/PycharmProjects/дом/smart_planner/main.py 
+# Smart Planner AI
 
-=== SMART PLANNER ===
+Smart Planner AI — это простой планировщик задач на Python с использованием SQLite и локального ИИ через Ollama.
 
-1. Add task
-2. Show tasks
-3. Delete task
-4. Exit
+## Возможности
 
-Choose: 2
-No tasks
+- Добавление задач  
+- Просмотр задач  
+- Удаление задач  
+- Автоматическая категория задачи через ИИ  
+- Оценка времени выполнения через ИИ  
+- Хранение данных в SQLite  
 
-=== SMART PLANNER ===
+## Технологии
 
-1. Add task
-2. Show tasks
-3. Delete task
-4. Exit
+- Python  
+- SQLite  
+- Ollama  
+- Mistral  
+- GitHub
+- FastAPI
 
-Choose: 1
-Task: гулять
-Traceback (most recent call last):
-  File "/Users/user/PycharmProjects/дом/smart_planner/main.py", line 43, in <module>
-    menu()
-    ~~~~^^
-  File "/Users/user/PycharmProjects/дом/smart_planner/main.py", line 23, in menu
-    task_service.add_task(title)
-    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^
-  File "/Users/user/PycharmProjects/дом/smart_planner/task_service.py", line 11, in add_task
-    cursor.execute("""
-    ~~~~~~~~~~~~~~^^^^
-    INSERT INTO tasks (title, category, estimated_time)
-    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    VALUES (?, ?, ?)
-    ^^^^^^^^^^^^^^^^
-    """, (title, category, estimated_time))
-    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-sqlite3.OperationalError: table tasks has no column named estimated_time
+## Структура проекта
 
-Process finished with exit code 1
+smart_planner/
+
+- main.py — главное меню  
+- database.py — работа с базой данных  
+- ai_service.py — работа с ИИ  
+- task_service.py — логика задач  
+- tasks.db — база данных  
+- requirements.txt — зависимости  
+- README.md  
+
+## Установка и запуск
+
+Установка зависимостей:
+
+pip install -r requirements.txt
+
+Запуск Ollama:
+
+ollama run mistral
+
+Запуск проекта:
+
+python main.py
+
+## Пример работы
+
+Задача:
+убраться дома
+
+Категория (ИИ):
+личное
+
+Время (ИИ):
+40 минут
+
+
+
+## ИИ использовался для:
+- генерации кода  
+- помощи с ошибками  
+- интеграции SQLite  
