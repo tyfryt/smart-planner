@@ -37,6 +37,7 @@ smart_planner/
 Установка зависимостей:
 
 pip install -r requirements.txt
+pip install fastapi uvicorn
 
 Запуск Ollama:
 
@@ -44,7 +45,8 @@ ollama run mistral
 
 Запуск проекта:
 
-python main.py
+в терминале
+uvicorn main:app --reload
 
 ## Пример работы
 
