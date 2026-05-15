@@ -57,6 +57,9 @@ python main.py
 Время (ИИ):
 40 минут
 
+## Видео с работой
+
+[https://drive.google.com/drive/u/1/home](https://drive.google.com/file/d/1TMb5FMgeOZS8Yw4qEiKlRRqa-R9RQBHl/view?usp=sharing)
 
 
 ## ИИ использовался для:
