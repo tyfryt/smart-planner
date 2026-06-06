@@ -1,19 +1,20 @@
+# Прямые импорты без точек
 from database import connect
-from ai_service import get_category, estimate_time
+from ai_service import analyze_task
 
 
-def add_task(title):
-    category = get_category(title)
-    estimated_time = estimate_time(title)
+def add_task(title: str):
+    # Используем комбинированный метод (1 запрос к ИИ вместо 2)
+    analysis = analyze_task(title)
+    category = analysis.get("category", "другое")
+    estimated_time = analysis.get("estimated_time", 30)
 
     conn = connect()
     cursor = conn.cursor()
-
     cursor.execute("""
     INSERT INTO tasks (title, category, estimated_time)
     VALUES (?, ?, ?)
     """, (title, category, estimated_time))
-
     conn.commit()
 
     task_id = cursor.lastrowid
@@ -30,30 +31,21 @@ def add_task(title):
 def get_tasks():
     conn = connect()
     cursor = conn.cursor()
-
-    cursor.execute("SELECT * FROM tasks")
+    cursor.execute("SELECT id, title, category, estimated_time FROM tasks")
     rows = cursor.fetchall()
     conn.close()
 
     return [
-        {
-            "id": r[0],
-            "title": r[1],
-            "category": r[2],
-            "estimated_time": r[3]
-        }
+        {"id": r[0], "title": r[1], "category": r[2], "estimated_time": r[3]}
         for r in rows
     ]
 
 
-def delete_task(task_id):
+def delete_task(task_id: int):
     conn = connect()
     cursor = conn.cursor()
-
     cursor.execute("DELETE FROM tasks WHERE id = ?", (task_id,))
     conn.commit()
-
     deleted = cursor.rowcount > 0
     conn.close()
-
     return deleted

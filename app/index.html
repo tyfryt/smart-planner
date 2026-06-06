@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Умный Планировщик ИИ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen font-sans antialiased">
+    <div class="max-w-2xl mx-auto py-10 px-4">
+        <h1 class="text-3xl font-bold text-slate-800 mb-8 flex items-center">
+            <i class="fas fa-brain text-indigo-600 mr-3 animate-pulse"></i> Умный Планировщик
+        </h1>
+
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-8">
+            <h2 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-3">Новая задача</h2>
+            <div class="flex gap-2">
+                <input type="text" id="taskTitle" placeholder="Например: написать отчет по работе..."
+                    class="flex-1 px-4 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
+                <button onclick="addTask()" id="addBtn"
+                    class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-lg font-medium transition-all min-w-[120px]">
+                    Добавить
+                </button>
+            </div>
+        </div>
+
+        <div id="taskList" class="space-y-4"></div>
+        <div id="emptyState" class="hidden text-center py-12 text-slate-400">
+            <i class="far fa-clipboard text-4xl mb-3 block"></i>
+            <p>Задач пока нет.</p>
+        </div>
+    </div>
+
+    <script>
+        const categoryTranslations = {
+            'работа': { text: 'Работа', bg: 'bg-blue-50', textClass: 'text-blue-600', icon: 'fa-briefcase' },
+            'личное': { text: 'Личное', bg: 'bg-green-50', textClass: 'text-green-600', icon: 'fa-user' },
+            'здоровье': { text: 'Здоровье', bg: 'bg-red-50', textClass: 'text-red-600', icon: 'fa-heartbeat' },
+            'обучение': { text: 'Обучение', bg: 'bg-purple-50', textClass: 'text-purple-600', icon: 'fa-graduation-cap' },
+            'другое': { text: 'Другое', bg: 'bg-slate-100', textClass: 'text-slate-600', icon: 'fa-folder' }
+        };
+
+        async function loadTasks() {
+            const response = await fetch('/api/tasks');
+            const tasks = await response.json();
+            const list = document.getElementById('taskList');
+            const empty = document.getElementById('emptyState');
+
+            list.innerHTML = '';
+            if (tasks.length === 0) { empty.classList.remove('hidden'); return; }
+            empty.classList.add('hidden');
+
+            tasks.forEach(task => {
+                const cat = categoryTranslations[task.category] || categoryTranslations['другое'];
+                const card = document.createElement('div');
+                card.className = "bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex justify-between items-center animate-fade-in";
+                card.innerHTML = `
+                    <div>
+                        <h3 class="font-medium text-slate-800">${task.title}</h3>
+                        <div class="flex gap-2 mt-2">
+                            <span class="${cat.bg} ${cat.textClass} text-xs px-2 py-1 rounded-md">
+                                <i class="fas ${cat.icon} mr-1"></i> ${cat.text}
+                            </span>
+                            <span class="bg-amber-50 text-amber-700 text-xs px-2 py-1 rounded-md">
+                                <i class="far fa-clock mr-1"></i> ${task.estimated_time} мин
+                            </span>
+                        </div>
+                    </div>
+                    <button onclick="deleteTask(${task.id})" class="text-slate-300 hover:text-red-500 p-2 transition-all">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        async function addTask() {
+            const input = document.getElementById('taskTitle');
+            const btn = document.getElementById('addBtn');
+            if (!input.value.trim()) return;
+
+            btn.disabled = true;
+            btn.innerText = 'Думает...';
+
+            try {
+                await fetch(`/api/tasks?title=${encodeURIComponent(input.value)}`, { method: 'POST' });
+                input.value = '';
+                await loadTasks();
+            } finally {
+                btn.disabled = false;
+                btn.innerText = 'Добавить';
+            }
+        }
+
+        async function deleteTask(id) {
+            if (confirm('Удалить?')) {
+                await fetch(`/api/tasks/${id}`, { method: 'DELETE' });
+                loadTasks();
+            }
+        }
+
+        loadTasks();
+    </script>
+</body>
+</html>
