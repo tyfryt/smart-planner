@@ -33,7 +33,8 @@ smart_planner/
 - task_service.py — логика задач  
 - tasks.db — база данных  
 - requirements.txt — зависимости  
-- README.md  
+- README.md
+- index.html - визуал
 
 ## Установка и запуск
 
